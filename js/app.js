@@ -63,9 +63,6 @@ var Player = function (x, y) {
 
     // The player initial location
     this.initialLocation = [x, y];
-
-    // The player speed
-    this.speed = 2;
 };
 
 Player.prototype.update = function () {
@@ -78,7 +75,8 @@ Player.prototype.render = function() {
 };
 
 Player.prototype.handleInput = function (keyCode) {
-    if (keyCode == 37) {
+    // If the left key is pressed
+    if (keyCode == 'left') {
         // If they are on the very left side of the screen
         if (this.x == 1) {
             // Do nothing because we dont want them to move off the screen
@@ -86,13 +84,14 @@ Player.prototype.handleInput = function (keyCode) {
         // Allow them to move left
         else {
             // The player has moved left
-            Player.x -- this.speed;
+            Player.x --;
 
             // Update the player location after moving it with the keys
             this.update();
         }
     }
-    if (keyCode == 38) {
+    // If the up key is pressed
+    if (keyCode == 'up') {
         // The player is in the water we need to return them to the grass
         if (Player.y == 6) {
             this.x = 3;
@@ -106,7 +105,8 @@ Player.prototype.handleInput = function (keyCode) {
             this.update();
         }
     }
-    if (keyCode == 39) {
+    // If the right key is pressed
+    if (keyCode == 'right') {
         // If player is on very right of the screen
         if (this.x == 5) {
             // Do nothing because we dont want them to move off the screen
@@ -119,12 +119,18 @@ Player.prototype.handleInput = function (keyCode) {
             this.update();
         }
     }
-    if (keyCode == 40) {
-        // The player has moved down
-        Player.y --;
+    // If the down key is pressed
+    if (keyCode == 'down') {
+        if (this.y == 1) {
+            // Do nothing because we dont want them to go off the screen
+        }
+        else {
+            // The player has moved down
+            Player.y --;
 
-        // Update the player location after moving it with the keys
-        this.update();
+            // Update the player location after moving it with the keys
+            this.update();
+        }
     }
 };
 
