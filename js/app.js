@@ -1,149 +1,120 @@
-// Enemies our player must avoid
-// Parameter: X and Y initial Location w/ speed
-var Enemy = function(x, y, speed) {
-    // Vars for our enemy
+var wins = 0;
+var fails = -1;
+var level = 1;
+var speed = 75;
+// Draw the enemy and player objects on the screen
+Object.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
 
-    // X and Y cords of the enemy
-    this.x = x;
-    this.y = y;
+//Reset player to beginning position
+Object.prototype.reset = function() {
+  player.x = 200;
+  player.y = 400;
 
-    // Location is an array of the x and y
-    this.location = [this.x, this.y];
+  fails++;
+  document.getElementById('fail').innerHTML = "Fails: " + fails;
+};
 
-    // Sprite Image of the enemy
+/*
+    Enemy Objects
+*/
+
+// Enemies the player must avoid
+var Enemy = function(x,y) {
+
+    // The image/sprite for enemies
     this.sprite = 'images/enemy-bug.png';
 
-    // Initial Location
-    this.initialLocation = [x, y];
-
-    // Enemy speed
-    this.speed = speed;
-};
-
-// Update the enemy's position
-// Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-
-    // There has been a collision bettween the player and the enemy
-    if (this.x == Player.x && this.y == Player.y) {
-        Player.x = 3;
-        Player.y = 1;
-    }
-    // The player has not hit the bug
-    else {
-        this.x += this.speed;
-    }
-};
-
-// Draw the enemy on the screen
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
-
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
-
-// The player the user controles
-var Player = function (x, y) {
-    // Vars for the Player
-
-    // The x and y cords
+    //x and y coordinates and movement speed
     this.x = x;
     this.y = y;
+    this.speed = Math.floor((Math.random() * speed) + 20);
+};
 
-    // An array of the x and y for location
-    this.location = [this.x, this.y];
+// Update the enemy's position, required method for game
+// Parameter: dt, a time delta between ticks
+Enemy.prototype.update = function(dt) {
+    //if the enemy crosses off screen, reset its position. Otherwise, it keeps running.
+    if(this.x <= 900){
+        this.x += this.speed * dt;
+    }else{
+        this.x = -(Math.floor((Math.random() * 400) + 50));
+        this.speed = Math.floor((Math.random() * speed) + 20);
+    }
 
-    // The sprite or image of the Player
+    //If the player comes within 30px of an enemy's x and y coordinates, reset the game
+    if(player.x >= this.x - 30 && player.x <= this.x + 30){
+        if(player.y >= this.y - 30 && player.y <= this.y + 30){
+            this.reset();
+        }
+    }
+};
+
+/*
+    Player Object
+*/
+
+// Player class and initial x and y coordinates
+var Player = function(){
     this.sprite = 'images/char-boy.png';
-
-    // The player initial location
-    this.initialLocation = [x, y];
+    this.x = 200;
+    this.y = 400;
 };
 
-Player.prototype.update = function () {
-    // After everything has updated re-render the player
-    this.render();
-};
-
-Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
-
-Player.prototype.handleInput = function (keyCode) {
-    // If the left key is pressed
-    if (keyCode == 'left') {
-        // If they are on the very left side of the screen
-        if (this.x == 1) {
-            // Do nothing because we dont want them to move off the screen
-        }
-        // Allow them to move left
-        else {
-            // The player has moved left
-            Player.x --;
-
-            // Update the player location after moving it with the keys
-            this.update();
-        }
+//Update player position
+Player.prototype.update = function(){
+    //if left key is pressed and player is not on edge of map, pressed decrement x
+    if(this.ctlKey === 'left' && this.x > 0){
+        this.x = this.x - 15;
+    //if right key is pressed and player is not on edge of map increment x
+}else if(this.ctlKey === 'right' && this.x < 815){
+        this.x = this.x + 15;
+    //if up key is pressed increment y
+    }else if(this.ctlKey === 'up'){
+        this.y = this.y - 15;
+    //if down key is pressed and player is not on edge of map decrement y
+    }else if (this.ctlKey === 'down' && this.y < 500){
+        this.y = this.y + 15;
     }
-    // If the up key is pressed
-    if (keyCode == 'up') {
-        // The player is in the water we need to return them to the grass
-        if (Player.y == 6) {
-            this.x = 3;
-            this.y = 1;
-        }
-        else {
-            // The player has moved up
-            Player.y ++;
+    this.ctlKey = null;
 
-            // Update the player location after moving it with the keys
-            this.update();
-        }
-    }
-    // If the right key is pressed
-    if (keyCode == 'right') {
-        // If player is on very right of the screen
-        if (this.x == 5) {
-            // Do nothing because we dont want them to move off the screen
-        }
-        else {
-            // The player has moved right
-            Player.x ++;
+    //If on water, reset
+    if(this.y < 25){
+        player.x = 200;
+        player.y = 400;
+        wins++;
+        level++;
+        speed = speed + 10;
+        document.getElementById('level').innerHTML = "Level: " + level;
+        document.getElementById('win').innerHTML = "Wins: " + wins;
 
-            // Update the player location after moving it with the keys
-            this.update();
-        }
-    }
-    // If the down key is pressed
-    if (keyCode == 'down') {
-        if (this.y == 1) {
-            // Do nothing because we dont want them to go off the screen
-        }
-        else {
-            // The player has moved down
-            Player.y --;
-
-            // Update the player location after moving it with the keys
-            this.update();
-        }
+        allEnemies.push(new Enemy(-100,225));
     }
 };
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
+
+//Input handler for player
+Player.prototype.handleInput = function(e){
+    this.ctlKey = e;
+};
 
 
+// Instantiate enemies and player objects
+var allEnemies = [];
+(function setEnemies(){
+    allEnemies.push(new Enemy(-50, 50));
+    allEnemies.push(new Enemy(-150,140));
+    allEnemies.push(new Enemy(-100,225));
+    allEnemies.push(new Enemy(-250,310));
+}());
+
+var player = new Player();
 
 
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
+// listens for key presses and sends the keys to
+// Player.handleInput() method.
+document.addEventListener('keydown', function(e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',
