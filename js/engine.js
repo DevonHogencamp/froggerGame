@@ -84,6 +84,7 @@ var Engine = (function(global) {
             enemy.render();
         });
         player.render();
+        gem.render();
     }
 
     Resources.load([
@@ -92,6 +93,7 @@ var Engine = (function(global) {
         'images/grass-block.png',
         'images/enemy-bug.png',
         'images/char-boy.png',
+        'images/gemBlue.png'
     ]);
     Resources.onReady(init);
 

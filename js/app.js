@@ -52,6 +52,16 @@ Enemy.prototype.update = function(dt) {
 };
 
 /*
+    Gem Object
+*/
+
+var Gem = function (x , y) {
+    this.sprite = 'images/gemBlue.png';
+    this.x = x;
+    this.y = y;
+};
+
+/*
     Player Object
 */
 
@@ -89,7 +99,20 @@ Player.prototype.update = function(){
         document.getElementById('level').innerHTML = "Level: " + level;
         document.getElementById('win').innerHTML = "Wins: " + wins;
 
-        allEnemies.push(new Enemy(-100,225));
+        var rand = Math.ceil(Math.random() * 4);
+
+        if (rand == 1) {
+            allEnemies.push(new Enemy(-50, 50));
+        }
+        else if (rand == 2) {
+            allEnemies.push(new Enemy(-150,140));
+        }
+        else if (rand == 3) {
+            allEnemies.push(new Enemy(-100,225));
+        }
+        else {
+            allEnemies.push(new Enemy(-250,310));
+        }
     }
 };
 
@@ -110,6 +133,7 @@ var allEnemies = [];
 }());
 
 var player = new Player();
+var gem = new Gem(200, 300);
 
 
 // listens for key presses and sends the keys to
