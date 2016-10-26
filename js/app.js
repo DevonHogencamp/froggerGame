@@ -102,6 +102,24 @@ Gem.prototype.update = function() {
 };
 
 /*
+    Rock Object
+*/
+
+var Rock = function (x ,y) {
+    this.sprite = 'images/Rock.png';
+    this.x = x;
+    this.y = y;
+};
+
+Rock.prototype.update = function () {
+    if (player.x >= this.x - 30 && player.x <= this.x + 30) {
+        if (player.y >= this.y - 30 && player.y <= this.y + 30) {
+            this.reset();
+        }
+    }
+};
+
+/*
     Player Object
 */
 
@@ -150,6 +168,12 @@ Player.prototype.update = function() {
         } else {
             allEnemies.push(new Enemy(-250, 310));
         }
+
+        var randRockY = Math.ceil(Math.random() * 500);
+        var randRockX = Math.ceil(Math.random() * 1200);
+
+        allRocks.push(new Rock(randRockX, randRockY));
+
     }
 };
 
@@ -167,6 +191,11 @@ var allEnemies = [];
     allEnemies.push(new Enemy(-150, 140));
     allEnemies.push(new Enemy(-100, 225));
     allEnemies.push(new Enemy(-250, 310));
+}());
+
+var allRocks = [];
+(function () {
+    allRocks.push(new Rock(400, 50));
 }());
 
 var player = new Player();

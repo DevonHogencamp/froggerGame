@@ -53,6 +53,9 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
+        allRocks.forEach(function (rock) {
+            rock.update();
+        });
         player.update();
         gem.update();
     }
@@ -84,8 +87,13 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
+
+        allRocks.forEach(function (rock) {
+            rock.render();
+        });
         player.render();
         gem.render();
+
     }
 
     Resources.load([
@@ -94,7 +102,8 @@ var Engine = (function(global) {
         'images/grass-block.png',
         'images/enemy-bug.png',
         'images/char-boy.png',
-        'images/gemBlue.png'
+        'images/gemBlue.png',
+        'images/Rock.png'
     ]);
     Resources.onReady(init);
 
