@@ -6,7 +6,7 @@ var Engine = (function(global) {
         patterns = {},
         lastTime;
 
-    canvas.width = 909;
+    canvas.width = 1313;
     canvas.height = 707;
     doc.body.appendChild(canvas);
 
@@ -54,6 +54,7 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+        gem.update();
     }
 
     function render() {
@@ -67,7 +68,7 @@ var Engine = (function(global) {
                 'images/grass-block.png'
             ],
             numRows = 7,
-            numCols = 9,
+            numCols = 13,
             row, col;
 
         for (row = 0; row < numRows; row++) {
